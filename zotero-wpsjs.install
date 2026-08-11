@@ -1,0 +1,32 @@
+# 获取实际调用 pacman 的普通用户
+get_original_user() {
+    if [ -n "$SUDO_USER" ]; then
+        echo "$SUDO_USER"
+    elif command -v logname >/dev/null 2>&1; then
+        logname 2>/dev/null || echo "$USER"
+    else
+        echo "$USER"
+    fi
+}
+
+post_install() {
+    USER_TO_RUN=$(get_original_user)
+    [ -z "$USER_TO_RUN" ] || [ "$USER_TO_RUN" = "root" ] && USER_TO_RUN="$USER"
+    echo "Installing Zotero-WPSJS plugin as user: $USER_TO_RUN"
+    sudo -u "$USER_TO_RUN" python3 /usr/share/zotero-wpsjs/install.py
+}
+
+pre_remove() {
+    USER_TO_RUN=$(get_original_user)
+    [ -z "$USER_TO_RUN" ] || [ "$USER_TO_RUN" = "root" ] && USER_TO_RUN="$USER"
+    echo "Uninstalling Zotero-WPSJS plugin as user: $USER_TO_RUN"
+    sudo -u "$USER_TO_RUN" python3 /usr/share/zotero-wpsjs/uninstall.py
+}
+
+post_upgrade() {
+    USER_TO_RUN=$(get_original_user)
+    [ -z "$USER_TO_RUN" ] || [ "$USER_TO_RUN" = "root" ] && USER_TO_RUN="$USER"
+    echo "Upgrading Zotero-WPSJS plugin as user: $USER_TO_RUN"
+    sudo -u "$USER_TO_RUN" python3 /usr/share/zotero-wpsjs/uninstall.py || true
+    sudo -u "$USER_TO_RUN" python3 /usr/share/zotero-wpsjs/install.py
+}
