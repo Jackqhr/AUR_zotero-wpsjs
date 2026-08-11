@@ -1,4 +1,4 @@
-# Maintainer: Your Name <email>
+# Maintainer: Jackqhr <jackqiuhongrui@outlook.com>
 pkgname=zotero-wpsjs
 pkgver=1.7.23                 # 手动指定
 pkgrel=1
