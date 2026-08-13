@@ -18,3 +18,5 @@ i suggest you to install it use `makepkg -si`
 
 ## Remark
 you can adjust `pkgver` by yourself if i forget to update.
+
+Please notice that this package will install files into wps folder in your user folder.
